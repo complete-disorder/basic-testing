@@ -9,13 +9,11 @@ type TestSimpleCalculatorProps = {
 
 type PropsWithoutAction = Omit<TestSimpleCalculatorProps, 'action'>;
 
-type InvalidProps = {
-  a: unknown;
-  b: unknown;
-  action: unknown;
-};
+type PropsWithoutExpected = Omit<TestSimpleCalculatorProps, 'expected'>;
 
-type PropsWithInvalidArguments = Omit<InvalidProps, 'action'> &
+type UnknownProps = Record<keyof PropsWithoutExpected, unknown>;
+
+type PropsWithInvalidArguments = Omit<UnknownProps, 'action'> &
   Pick<TestSimpleCalculatorProps, 'action'>;
 
 type PropsWithInvalidAction = Omit<
@@ -33,7 +31,7 @@ describe('simpleCalculator tests', () => {
     expect(simpleCalculator({ a, b, action })).toBe(expected);
   };
 
-  const shouldCalculatorReturnNull = ({ a, b, action }: InvalidProps) => {
+  const shouldCalculatorReturnNull = ({ a, b, action }: UnknownProps) => {
     expect(simpleCalculator({ a, b, action })).toBeNull();
   };
 
