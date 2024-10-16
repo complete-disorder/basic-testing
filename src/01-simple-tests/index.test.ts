@@ -1,32 +1,200 @@
-// Uncomment the code below and write your tests
-// import { simpleCalculator, Action } from './index';
+import { simpleCalculator, Action } from './index';
+
+type TestSimpleCalculatorProps = {
+  a: number;
+  b: number;
+  action: Action;
+  expected: number | null;
+};
+
+type PropsWithoutAction = Omit<TestSimpleCalculatorProps, 'action'>;
+
+type InvalidProps = {
+  a: unknown;
+  b: unknown;
+  action: unknown;
+};
+
+type PropsWithInvalidArguments = Omit<InvalidProps, 'action'> &
+  Pick<TestSimpleCalculatorProps, 'action'>;
+
+type PropsWithInvalidAction = Omit<
+  TestSimpleCalculatorProps,
+  'action' | 'expected'
+> & { action: unknown };
 
 describe('simpleCalculator tests', () => {
+  const shouldCalculateNumbersCorrectly = ({
+    a,
+    b,
+    action,
+    expected,
+  }: TestSimpleCalculatorProps) => {
+    expect(simpleCalculator({ a, b, action })).toBe(expected);
+  };
+
+  const shouldCalculatorReturnNull = ({ a, b, action }: InvalidProps) => {
+    expect(simpleCalculator({ a, b, action })).toBeNull();
+  };
+
+  const shouldAddTwoNumbersCorrectly = ({
+    a,
+    b,
+    expected,
+  }: PropsWithoutAction) => {
+    shouldCalculateNumbersCorrectly({
+      a,
+      b,
+      expected,
+      action: Action.Add,
+    });
+  };
+
+  const shouldSubstractTwoNumbersCorrectly = ({
+    a,
+    b,
+    expected,
+  }: PropsWithoutAction) => {
+    shouldCalculateNumbersCorrectly({
+      a,
+      b,
+      expected,
+      action: Action.Subtract,
+    });
+  };
+
+  const shouldMultiPlyTwoNumbersCorrectly = ({
+    a,
+    b,
+    expected,
+  }: PropsWithoutAction) => {
+    shouldCalculateNumbersCorrectly({
+      a,
+      b,
+      expected,
+      action: Action.Multiply,
+    });
+  };
+
+  const shoulDivideTwoNumbersCorrectly = ({
+    a,
+    b,
+    expected,
+  }: PropsWithoutAction) => {
+    shouldCalculateNumbersCorrectly({
+      a,
+      b,
+      expected,
+      action: Action.Divide,
+    });
+  };
+
+  const shoulExponiateTwoNumbersCorrectly = ({
+    a,
+    b,
+    expected,
+  }: PropsWithoutAction) => {
+    shouldCalculateNumbersCorrectly({
+      a,
+      b,
+      expected,
+      action: Action.Exponentiate,
+    });
+  };
+
+  const shouldReturnNullForInvalidArguments = ({
+    a,
+    b,
+    action,
+  }: PropsWithInvalidArguments) => {
+    shouldCalculatorReturnNull({ a, b, action });
+  };
+
+  const shouldReturnNullForInvalidAction = ({
+    a,
+    b,
+    action,
+  }: PropsWithInvalidAction) => {
+    shouldCalculatorReturnNull({ a, b, action });
+  };
+
   test('should add two numbers', () => {
-    // Write your test here
+    shouldAddTwoNumbersCorrectly({
+      a: 1,
+      b: 2,
+      expected: 3,
+    });
+
+    shouldAddTwoNumbersCorrectly({
+      a: 1,
+      b: -1,
+      expected: 0,
+    });
+
+    shouldAddTwoNumbersCorrectly({
+      a: 0,
+      b: 0,
+      expected: 0,
+    });
   });
 
   test('should subtract two numbers', () => {
-    // Write your test here
+    shouldSubstractTwoNumbersCorrectly({
+      a: 3,
+      b: 2,
+      expected: 1,
+    });
+
+    shouldSubstractTwoNumbersCorrectly({
+      a: 1,
+      b: 1,
+      expected: 0,
+    });
+
+    shouldSubstractTwoNumbersCorrectly({
+      a: 0,
+      b: 0,
+      expected: 0,
+    });
   });
 
   test('should multiply two numbers', () => {
-    // Write your test here
+    shouldMultiPlyTwoNumbersCorrectly({
+      a: 3,
+      b: 3,
+      expected: 9,
+    });
   });
 
   test('should divide two numbers', () => {
-    // Write your test here
+    shoulDivideTwoNumbersCorrectly({
+      a: 4,
+      b: 2,
+      expected: 2,
+    });
   });
 
   test('should exponentiate two numbers', () => {
-    // Write your test here
+    shoulExponiateTwoNumbersCorrectly({
+      a: 2,
+      b: 3,
+      expected: 8,
+    });
   });
 
   test('should return null for invalid action', () => {
-    // Write your test here
+    shouldReturnNullForInvalidAction({
+      a: 1,
+      b: 1,
+      action: 'invalid action',
+    });
   });
 
   test('should return null for invalid arguments', () => {
-    // Write your test here
+    shouldReturnNullForInvalidArguments({
+      a: '5',
+      b: 1,
+      action: Action.Add,
+    });
   });
 });
